@@ -1,3 +1,6 @@
+pub mod rgb_picker;
+use crate::rgb_picker::RgbPicker;
+
 use leptos::*;
 
 fn main() {
@@ -8,7 +11,7 @@ fn main() {
 fn App(cx: Scope) -> impl IntoView {
     view! { cx,
         <div>
-            <p>"Hello, Github"</p>
+            <RgbPicker/>
         </div>
     }
 }
