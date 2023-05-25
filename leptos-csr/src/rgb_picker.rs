@@ -60,17 +60,15 @@ fn RgbInput(
 
     view! {cx,
         <div>
-            <button // B
+            <button
                 on:click=move |_| {
                     set_value.update(|n| *n-=1);
                 }
             >
                 "Less " {&color}
             </button>
-            //{move || value().get} // on stable version, this would be value.get() instead.
-            {value} // this is already a function in nightly Leptos, the closure above is redundant.
-                // value is already a reactive fn, so doing value() here would unwrap the reactivity.
-            <button // B
+                {value}
+            <button
                 on:click=move |_| {
                     set_value.update(|n| *n+=1);
                 }
