@@ -4,4 +4,6 @@
 
 #### Also, journeying into the depths of Rust / WASM and web dev via [Leptos](https://leptos.dev/) & [Guide](https://leptos-rs.github.io/leptos/01_introduction.html)
 
-#### I plan to make 2 branches per scope (a main, working branch, and a dev branch) for Rustlings, Leptos CSR, and Leptos SSR
+#### I plan to make 1 main branch, and 1 dev branch per scope of work.
+
+#### This will allow me to play around with commits and test some of the complexities of git / github.
