@@ -7,8 +7,9 @@ pub fn Todo(cx: Scope) -> impl IntoView {
         "make signal for todos (vec containing a string, bool, and id --done",
         "make todo input and add todo button --done",
         "make toggle todo, delete, & maybe edit",
-        "make for component to iterate over them",
+        "make for component to iterate over them -- partially done",
     ];
+    #[derive(Clone)]
     struct TodoData {
         id: usize,
         title: String,
@@ -28,7 +29,12 @@ pub fn Todo(cx: Scope) -> impl IntoView {
                 is_complete: false,
             })
         });
+        set_input("".to_string());
         new_id += 1;
+    };
+    let remove_todo = move |todo: &TodoData| {
+        let remove_id = todo.id;
+        set_todos.update(move |todos| todos.retain(|todo| todo.id != remove_id));
     };
 
     view! {cx,
@@ -52,19 +58,15 @@ pub fn Todo(cx: Scope) -> impl IntoView {
                 </button>
             </div>
             <ul>
-                <For // fix me! not accessing todos, set_todos or the .id correctly!
+                <For // map out each todo, zooming scope to allow manipulation of each todo individually
                     each=todos
                     key=|todo| todo.id
-                    view=move |cx, (id, (todos, set_todos))| {
+                    view=move |cx, todo| {
                         view! { cx,
                             <li>
-                                {title}
+                                {&todo.title}
                                 <button
-                                    on:click= |_| {
-                                        set_todos.update(|todos| {
-                                            todos.retain((|todo_id, _)| todo_id != &id)
-                                        });
-                                    }
+                                    on:click=move |_| remove_todo(&todo)
                                 >
                                     "Delete"
                                 </button>
