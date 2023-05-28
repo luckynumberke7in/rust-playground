@@ -4,8 +4,8 @@ use leptos::*;
 pub fn Todo(cx: Scope) -> impl IntoView {
     let static_todos = vec![
         "make normal list with .map --done",
-        "make signal for todos (vec containing a string, bool, and id",
-        "make todo input and add todo button",
+        "make signal for todos (vec containing a string, bool, and id --done",
+        "make todo input and add todo button --done",
         "make toggle todo, delete, & maybe edit",
         "make for component to iterate over them",
     ];
@@ -17,9 +17,19 @@ pub fn Todo(cx: Scope) -> impl IntoView {
 
     let (todos, set_todos) = create_signal(cx, Vec::new());
 
-    // change methods for updating id. this is insufficient and will introduce bugs.
-    let curr_id = move || todos().len() + 1;
+    let mut new_id = 0;
     let (input, set_input) = create_signal(cx, "".to_string());
+
+    let add_todo = move |_| {
+        set_todos.update(move |todos| {
+            todos.push(TodoData {
+                id: new_id,
+                title: input().trim().to_string(),
+                is_complete: false,
+            })
+        });
+        new_id += 1;
+    };
 
     view! {cx,
         <div>
@@ -30,23 +40,39 @@ pub fn Todo(cx: Scope) -> impl IntoView {
             </ul>
             <div> // add todo's
                 <input type="text"
-                on:input=move |ev| {
-                    set_input(event_target_value(&ev));
-                }
+                    on:input=move |ev| {
+                        set_input(event_target_value(&ev));
+                    }
                 >
                 </input>
                 <button
-                    on:click=move |_| {
-                        set_todos.push({
-                            id: curr_id, // getting ambiguous error
-                            title: input.trim().to_string(),
-                            is_complete: false
-                        })
-                    }
+                    on:click=add_todo
                 >
-                    "Create todo"
+                    "Add todo"
                 </button>
             </div>
+            <ul>
+                <For // fix me! not accessing todos, set_todos or the .id correctly!
+                    each=todos
+                    key=|todo| todo.id
+                    view=move |cx, (id, (todos, set_todos))| {
+                        view! { cx,
+                            <li>
+                                {title}
+                                <button
+                                    on:click= |_| {
+                                        set_todos.update(|todos| {
+                                            todos.retain((|todo_id, _)| todo_id != &id)
+                                        });
+                                    }
+                                >
+                                    "Delete"
+                                </button>
+                            </li>
+                        }
+                    }
+                />
+            </ul>
         </div>
     }
 }
