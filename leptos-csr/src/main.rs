@@ -1,5 +1,5 @@
-pub mod rgb_picker;
-use crate::rgb_picker::RgbPicker;
+pub mod todo;
+use crate::todo::Todo;
 
 use leptos::*;
 
@@ -11,7 +11,7 @@ fn main() {
 fn App(cx: Scope) -> impl IntoView {
     view! { cx,
         <div>
-            <RgbPicker/>
+            <Todo/>
         </div>
     }
 }
